@@ -28,10 +28,17 @@ RSpec.describe Note, :type => :model do
     note = FactoryGirl.create(:note)
     expect(note.blurb).to eq "#{note.title} #{note.content}".slice(0,255)
   end
-  it "can generate a blurb consisting of the title and content, up to 255 characters in length" do
+  it "blurb is up to 255 characters in length" do
     the_title = SecureRandom.hex(25)
     the_content = SecureRandom.hex(200)
     note = FactoryGirl.create(:note, title: the_title, content: the_content)
     expect(note.blurb.length).to eq 255
+  end
+  it "returns a sorted array of results that match" do
+    smith = FactoryGirl.create(:note, title: "Smith S S S")
+    strauss = FactoryGirl.create(:note, title: "Strauss S S S")
+    jones = FactoryGirl.create(:note, title: "Jones S S S")
+
+    expect(Note.by_letter("S")).to eq [smith, strauss]
   end
 end
